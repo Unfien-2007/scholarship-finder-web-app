@@ -1,0 +1,27 @@
+# Maven and generated build output
+target/
+bin/
+*.class
+
+# IDE metadata
+.idea/
+.vscode/
+*.iml
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs and local reports
+*.log
+hs_err_pid*.log
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Internal modernization artifacts
+.github/modernize/

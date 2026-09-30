@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Profile | Scholarship Finder</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" href="/">Scholarship Finder <span>OPEN DOORS</span></a>
+    <div class="session-area">
+        <span id="sessionLabel">Student profile</span>
+        <a class="button button-quiet" href="/">Browse scholarships</a>
+        <button id="logoutButton" class="button button-dark" type="button">Sign out</button>
+    </div>
+</header>
+<main class="profile-main">
+    <section id="profileGate" class="empty hidden">
+        <h2>Sign in to view your profile</h2>
+        <p>Return to the scholarship board to sign in or create a student account.</p>
+        <a class="button button-accent" href="/">Go to scholarship board</a>
+    </section>
+    <div id="profileContent" class="hidden">
+        <section class="profile-hero">
+            <div>
+                <p class="eyebrow">Student workspace</p>
+                <h1 id="welcomeTitle">My profile</h1>
+                <p class="hero-copy">Keep your details current so your scholarship matches stay relevant.</p>
+            </div>
+            <div class="profile-score"><span id="matchCount">0</span><small>profile matches</small></div>
+        </section>
+        <section class="profile-layout">
+            <form id="profileForm" class="profile-card">
+                <div class="section-heading"><div><p class="eyebrow">Your details</p><h2>Matching profile</h2></div></div>
+                <label>Full name<input name="fullName" required></label>
+                <label>Email<input name="email" type="email" readonly></label>
+                <label>GWA (%)<input name="gwa" type="number" min="0" max="100" step="0.01" required></label>
+                <label>Education level<select name="educationLevel" required><option value="SENIOR_HIGH_SCHOOL">Senior high school graduate</option><option value="UNDERGRADUATE">Undergraduate</option><option value="GRADUATE">Graduate</option></select></label>
+                <label>City or province<input name="location" required></label>
+                <label>Income bracket<select name="incomeBracket" required><option value="LOW">Low</option><option value="MIDDLE">Middle</option><option value="HIGH">High</option></select></label>
+                <p id="profileFeedback" class="feedback" role="status"></p>
+                <button class="button button-accent" type="submit">Save profile</button>
+            </form>
+            <section class="profile-card application-card">
+                <div class="section-heading"><div><p class="eyebrow">Application tracker</p><h2>Scholarship status</h2></div></div>
+                <div class="tabs" role="tablist">
+                    <button class="tab active" data-tab="matches" type="button">Matches</button>
+                    <button class="tab" data-tab="pending" type="button">Pending</button>
+                    <button class="tab" data-tab="results" type="button">Results received</button>
+                </div>
+                <div id="applicationFeedback" class="feedback" role="status"></div>
+                <div id="scholarshipList" class="profile-scholarship-list"></div>
+            </section>
+        </section>
+    </div>
+</main>
+<script src="/profile.js"></script>
+</body>
+</html>

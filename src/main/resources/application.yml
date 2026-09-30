@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: scholarship-finder
+  datasource:
+    url: jdbc:h2:mem:scholarshipdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  h2:
+    console:
+      enabled: true
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:change-this-development-secret-to-a-long-value}
+    expiration-hours: 8
+
+server:
+  error:
+    include-message: always

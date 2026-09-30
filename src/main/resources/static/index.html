@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Scholarship Finder</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" href="/">Scholarship Finder <span>OPEN DOORS</span></a>
+    <div class="session-area">
+        <span id="sessionLabel">Browsing as guest</span>
+        <a id="profileButton" class="button button-quiet hidden" href="/profile.html">My profile</a>
+        <button id="loginButton" class="button button-dark" type="button">Sign in</button>
+        <button id="logoutButton" class="button button-quiet hidden" type="button">Sign out</button>
+    </div>
+</header>
+<main>
+    <section class="hero">
+        <div>
+            <p class="eyebrow">Funding for what comes next</p>
+            <h1>Find the scholarship that fits your next chapter.</h1>
+            <p class="hero-copy">Search verified opportunities by study level and location. Students can apply in one click after signing in.</p>
+        </div>
+        <div class="hero-mark" aria-hidden="true">SF<span>+</span></div>
+    </section>
+
+    <section class="workspace">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">Opportunity board</p>
+                <h2>Open scholarships</h2>
+            </div>
+            <div class="heading-actions"><span id="resultCount" class="result-count"></span><button id="matchButton" class="button button-dark hidden" type="button">Match my profile</button></div>
+        </div>
+        <form id="searchForm" class="filters">
+            <label>Education level
+                <select id="educationLevel">
+                    <option value="">All levels</option>
+                    <option value="SENIOR_HIGH_SCHOOL">Senior high school</option>
+                    <option value="UNDERGRADUATE">Undergraduate</option>
+                    <option value="GRADUATE">Graduate</option>
+                </select>
+            </label>
+            <label>Location
+                <input id="location" type="search" placeholder="e.g. Manila">
+            </label>
+            <button class="button button-accent" type="submit">Search</button>
+        </form>
+        <div id="feedback" class="feedback" role="status"></div>
+        <div id="scholarshipGrid" class="scholarship-grid"></div>
+    </section>
+
+    <section id="adminPanel" class="admin-panel hidden">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">Administrator workspace</p>
+                <h2>Publish an opportunity</h2>
+            </div>
+        </div>
+        <form id="adminForm" class="admin-form">
+            <label>Title<input name="title" required></label>
+            <label>Provider<input name="provider" required></label>
+            <label>Amount<input name="amount" type="number" min="1" step="0.01" required></label>
+            <label>Deadline<input name="deadline" type="date" required></label>
+            <label>Education level<select name="educationLevel" required><option value="UNDERGRADUATE">Undergraduate</option><option value="SENIOR_HIGH_SCHOOL">Senior high school</option><option value="GRADUATE">Graduate</option></select></label>
+            <label>Location<input name="location" required></label>
+            <label>Minimum GWA (%)<input name="minimumGwa" type="number" min="0" max="100" step="0.01"></label>
+            <label>Income bracket<input name="incomeBracket" placeholder="LOW"></label>
+            <label>Application period<input name="applicationPeriod" placeholder="Usually January to March" required></label>
+            <label class="wide">Benefits<textarea name="benefits" rows="3" required></textarea></label>
+            <label class="wide">Requirements<textarea name="requirements" rows="3" required></textarea></label>
+            <button class="button button-accent" type="submit">Publish scholarship</button>
+        </form>
+    </section>
+</main>
+<div id="loginDialog" class="dialog-backdrop hidden">
+    <form id="loginForm" class="dialog">
+        <button id="closeDialog" class="close-button" type="button" aria-label="Close">&times;</button>
+        <p class="eyebrow">Your scholarship desk</p>
+        <h2>Sign in</h2>
+        <p class="dialog-copy">Use a student account to apply, or an administrator account to publish listings.</p>
+        <label>Email<input name="email" type="email" value="student@example.com" required></label>
+        <label>Password<input name="password" type="password" value="student123" required></label>
+        <div id="loginError" class="form-error"></div>
+        <button class="button button-dark full-width" type="submit">Continue</button>
+        <button id="signupButton" class="text-button" type="button">Create a student account</button>
+    </form>
+</div>
+<div id="signupDialog" class="dialog-backdrop hidden">
+    <form id="signupForm" class="dialog">
+        <button id="closeSignup" class="close-button" type="button" aria-label="Close">&times;</button>
+        <p class="eyebrow">Build your profile</p>
+        <h2>Sign up</h2>
+        <p class="dialog-copy">Tell us what you are studying so we can surface better matches.</p>
+        <label>Full name<input name="fullName" required></label>
+        <label>Email<input name="email" type="email" required></label>
+        <label>Password<input name="password" type="password" minlength="8" required></label>
+        <label>Education level<select name="educationLevel" required><option value="SENIOR_HIGH_SCHOOL">Senior high school graduate</option><option value="UNDERGRADUATE">Undergraduate</option><option value="GRADUATE">Graduate</option></select></label>
+        <label>GWA (%)<input name="gwa" type="number" min="0" max="100" step="0.01" placeholder="e.g. 92" required></label>
+        <label>City or province<input name="location" placeholder="e.g. Manila" required></label>
+        <label>Income bracket<select name="incomeBracket" required><option value="LOW">Low</option><option value="MIDDLE">Middle</option><option value="HIGH">High</option></select></label>
+        <div id="signupError" class="form-error"></div>
+        <button class="button button-dark full-width" type="submit">Create account</button>
+    </form>
+</div>
+<div id="detailDialog" class="dialog-backdrop hidden">
+    <section class="dialog detail-dialog" aria-labelledby="detailTitle">
+        <button id="closeDetail" class="close-button" type="button" aria-label="Close scholarship details">&times;</button>
+        <p id="detailMeta" class="eyebrow"></p>
+        <h2 id="detailTitle"></h2>
+        <p id="detailProvider" class="dialog-copy"></p>
+        <div class="detail-facts">
+            <span id="detailAmount"></span>
+            <span id="detailDeadline"></span>
+        </div>
+        <h3>Application period</h3>
+        <p id="detailPeriod" class="requirements-copy"></p>
+        <h3>Benefits</h3>
+        <p id="detailBenefits" class="requirements-copy"></p>
+        <h3>Requirements</h3>
+        <p id="detailRequirements" class="requirements-copy"></p>
+        <button id="detailApply" class="button button-dark hidden" type="button">Apply now</button>
+    </section>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>
