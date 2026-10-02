@@ -2,7 +2,12 @@ const state = { token: localStorage.getItem('scholarshipToken'), role: localStor
 const grid = document.querySelector('#scholarshipGrid');
 const feedback = document.querySelector('#feedback');
 
+if (document.body?.dataset.page === 'admin' && (!state.token || state.role !== 'ROLE_ADMIN')) {
+    window.location.href = '/';
+}
+
 function setFeedback(message, isError = false) {
+    if (!feedback) return;
     feedback.textContent = message;
     feedback.classList.toggle('error', isError);
 }
@@ -116,23 +121,39 @@ function escapeHtml(value) { return String(value).replace(/[&<>'"]/g, character 
 function updateSession() {
     const label = document.querySelector('#sessionLabel');
     const loggedIn = Boolean(state.token);
-    label.textContent = loggedIn ? `${state.role === 'ROLE_ADMIN' ? 'Administrator' : 'Student'} session` : 'Browsing as guest';
-    document.querySelector('#loginButton').classList.toggle('hidden', loggedIn);
-    document.querySelector('#logoutButton').classList.toggle('hidden', !loggedIn);
-    document.querySelector('#adminPanel').classList.toggle('hidden', state.role !== 'ROLE_ADMIN');
-    document.querySelector('#matchButton').classList.toggle('hidden', state.role !== 'ROLE_STUDENT');
-    document.querySelector('#profileButton').classList.toggle('hidden', state.role !== 'ROLE_STUDENT');
+    if (label) label.textContent = loggedIn ? `${state.role === 'ROLE_ADMIN' ? 'Administrator' : 'Student'} session` : 'Browsing as guest';
+    const loginButton = document.querySelector('#loginButton');
+    const logoutButton = document.querySelector('#logoutButton');
+    const matchButton = document.querySelector('#matchButton');
+    const profileButton = document.querySelector('#profileButton');
+    const adminButton = document.querySelector('#adminButton');
+    if (loginButton) loginButton.classList.toggle('hidden', loggedIn);
+    if (logoutButton) logoutButton.classList.toggle('hidden', !loggedIn);
+    if (matchButton) matchButton.classList.toggle('hidden', state.role !== 'ROLE_STUDENT');
+    if (profileButton) profileButton.classList.toggle('hidden', state.role !== 'ROLE_STUDENT');
+    if (adminButton) adminButton.classList.toggle('hidden', state.role !== 'ROLE_ADMIN');
 }
 
-document.querySelector('#searchForm').addEventListener('submit', event => { event.preventDefault(); loadScholarships(); });
-document.querySelector('#matchButton').addEventListener('click', loadMatches);
-document.querySelector('#loginButton').addEventListener('click', () => document.querySelector('#loginDialog').classList.remove('hidden'));
-document.querySelector('#closeDialog').addEventListener('click', () => document.querySelector('#loginDialog').classList.add('hidden'));
-document.querySelector('#closeDetail').addEventListener('click', () => document.querySelector('#detailDialog').classList.add('hidden'));
-document.querySelector('#signupButton').addEventListener('click', () => { document.querySelector('#loginDialog').classList.add('hidden'); document.querySelector('#signupDialog').classList.remove('hidden'); });
-document.querySelector('#closeSignup').addEventListener('click', () => document.querySelector('#signupDialog').classList.add('hidden'));
-document.querySelector('#logoutButton').addEventListener('click', () => { localStorage.clear(); state.token = null; state.role = null; updateSession(); loadScholarships(); });
-document.querySelector('#loginForm').addEventListener('submit', async event => {
+const searchForm = document.querySelector('#searchForm');
+if (searchForm) {
+    searchForm.addEventListener('submit', event => { event.preventDefault(); loadScholarships(); });
+}
+const matchButton = document.querySelector('#matchButton');
+if (matchButton) matchButton.addEventListener('click', loadMatches);
+const loginButton = document.querySelector('#loginButton');
+if (loginButton) loginButton.addEventListener('click', () => document.querySelector('#loginDialog')?.classList.remove('hidden'));
+const closeDialog = document.querySelector('#closeDialog');
+if (closeDialog) closeDialog.addEventListener('click', () => document.querySelector('#loginDialog')?.classList.add('hidden'));
+const closeDetail = document.querySelector('#closeDetail');
+if (closeDetail) closeDetail.addEventListener('click', () => document.querySelector('#detailDialog')?.classList.add('hidden'));
+const signupButton = document.querySelector('#signupButton');
+if (signupButton) signupButton.addEventListener('click', () => { document.querySelector('#loginDialog')?.classList.add('hidden'); document.querySelector('#signupDialog')?.classList.remove('hidden'); });
+const closeSignup = document.querySelector('#closeSignup');
+if (closeSignup) closeSignup.addEventListener('click', () => document.querySelector('#signupDialog')?.classList.add('hidden'));
+const logoutButton = document.querySelector('#logoutButton');
+if (logoutButton) logoutButton.addEventListener('click', () => { localStorage.clear(); state.token = null; state.role = null; updateSession(); if (searchForm) loadScholarships(); });
+const loginForm = document.querySelector('#loginForm');
+if (loginForm) loginForm.addEventListener('submit', async event => {
     event.preventDefault();
     const form = new FormData(event.target);
     const errorBox = document.querySelector('#loginError');
@@ -144,11 +165,13 @@ document.querySelector('#loginForm').addEventListener('submit', async event => {
         if (!body?.token) throw new Error('Login response did not include a token.');
         state.token = body.token; state.role = body.role;
         localStorage.setItem('scholarshipToken', state.token); localStorage.setItem('scholarshipRole', state.role);
-        document.querySelector('#loginDialog').classList.add('hidden'); updateSession();
-        loadScholarships();
+        document.querySelector('#loginDialog')?.classList.add('hidden'); updateSession();
+        if (searchForm) loadScholarships();
+        if (state.role === 'ROLE_ADMIN') window.location.href = '/admin.html';
     } catch (error) { errorBox.textContent = error.message; }
 });
-document.querySelector('#signupForm').addEventListener('submit', async event => {
+const signupForm = document.querySelector('#signupForm');
+if (signupForm) signupForm.addEventListener('submit', async event => {
     event.preventDefault();
     const form = new FormData(event.target);
     const errorBox = document.querySelector('#signupError');
@@ -162,17 +185,19 @@ document.querySelector('#signupForm').addEventListener('submit', async event => 
         if (!body?.token) throw new Error('Signup response did not include a token.');
         state.token = body.token; state.role = body.role;
         localStorage.setItem('scholarshipToken', state.token); localStorage.setItem('scholarshipRole', state.role);
-        document.querySelector('#signupDialog').classList.add('hidden'); updateSession(); loadMatches();
+        document.querySelector('#signupDialog')?.classList.add('hidden'); updateSession(); if (searchForm) loadMatches();
     } catch (error) { errorBox.textContent = error.message; }
 });
-document.querySelector('#adminForm').addEventListener('submit', async event => {
+const adminForm = document.querySelector('#adminForm');
+if (adminForm) adminForm.addEventListener('submit', async event => {
     event.preventDefault();
     const values = Object.fromEntries(new FormData(event.target));
     values.amount = Number(values.amount); values.minimumGwa = values.minimumGwa ? Number(values.minimumGwa) : null;
     const response = await fetch('/api/admin/scholarships', { method: 'POST', headers: headers(true), body: JSON.stringify(values) });
     if (!response.ok) { setFeedback('The scholarship could not be published.', true); return; }
-    event.target.reset(); setFeedback('Scholarship published successfully.'); loadScholarships();
+    event.target.reset(); setFeedback('Scholarship published successfully.');
+    if (searchForm) loadScholarships();
 });
 
 updateSession();
-loadScholarships();
+if (searchForm) loadScholarships();

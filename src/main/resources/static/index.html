@@ -6,12 +6,13 @@
     <title>Scholarship Finder</title>
     <link rel="stylesheet" href="/styles.css">
 </head>
-<body>
+<body data-page="home">
 <header class="topbar">
     <a class="brand" href="/">Scholarship Finder <span>OPEN DOORS</span></a>
     <div class="session-area">
         <span id="sessionLabel">Browsing as guest</span>
         <a id="profileButton" class="button button-quiet hidden" href="/profile.html">My profile</a>
+        <a id="adminButton" class="button button-quiet hidden" href="/admin.html">Admin</a>
         <button id="loginButton" class="button button-dark" type="button">Sign in</button>
         <button id="logoutButton" class="button button-quiet hidden" type="button">Sign out</button>
     </div>
@@ -52,28 +53,6 @@
         <div id="scholarshipGrid" class="scholarship-grid"></div>
     </section>
 
-    <section id="adminPanel" class="admin-panel hidden">
-        <div class="section-heading">
-            <div>
-                <p class="eyebrow">Administrator workspace</p>
-                <h2>Publish an opportunity</h2>
-            </div>
-        </div>
-        <form id="adminForm" class="admin-form">
-            <label>Title<input name="title" required></label>
-            <label>Provider<input name="provider" required></label>
-            <label>Amount<input name="amount" type="number" min="1" step="0.01" required></label>
-            <label>Deadline<input name="deadline" type="date" required></label>
-            <label>Education level<select name="educationLevel" required><option value="UNDERGRADUATE">Undergraduate</option><option value="SENIOR_HIGH_SCHOOL">Senior high school</option><option value="GRADUATE">Graduate</option></select></label>
-            <label>Location<input name="location" required></label>
-            <label>Minimum GWA (%)<input name="minimumGwa" type="number" min="0" max="100" step="0.01"></label>
-            <label>Income bracket<input name="incomeBracket" placeholder="LOW"></label>
-            <label>Application period<input name="applicationPeriod" placeholder="Usually January to March" required></label>
-            <label class="wide">Benefits<textarea name="benefits" rows="3" required></textarea></label>
-            <label class="wide">Requirements<textarea name="requirements" rows="3" required></textarea></label>
-            <button class="button button-accent" type="submit">Publish scholarship</button>
-        </form>
-    </section>
 </main>
 <div id="loginDialog" class="dialog-backdrop hidden">
     <form id="loginForm" class="dialog">

@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/", "/index.html", "/profile.html", "/styles.css", "/app.js", "/profile.js", "/favicon.ico", "/error", "/api/auth/**", "/api/scholarships", "/api/scholarships/*", "/api/scholarships/matches", "/h2-console/**").permitAll()
+                    .requestMatchers("/", "/index.html", "/profile.html", "/admin.html", "/styles.css", "/app.js", "/profile.js", "/favicon.ico", "/error", "/api/auth/**", "/api/scholarships", "/api/scholarships/*", "/api/scholarships/matches", "/h2-console/**").permitAll()
                         .requestMatchers("/api/scholarships/matches/me").hasRole("STUDENT")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/applications/**", "/api/me").hasRole("STUDENT")
